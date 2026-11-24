@@ -1,0 +1,497 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Space Academy</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap"><style>
+:root{--bg:#EEEAFE;--card:#FFFFFF;--ink:#1B1740;--mute:#5A557E;--pri:#5B3FA6;--onpri:#FFFFFF;--line:#D4CCF5;--star:#F2B544;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--line:#2D3480;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--line:#2D3480;color-scheme:dark}
+*{box-sizing:border-box}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:700 18px/1.4 Nunito,system-ui,sans-serif;min-height:100vh}
+#home{max-width:560px;margin:0 auto;padding:18px 14px 48px}
+h1,h2{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;margin:0}
+h1{font-size:1.9rem}h2{font-size:1.2rem;margin:20px 0 8px}
+.sub{color:var(--mute);margin:4px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hc{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:20px;padding:16px 10px;min-height:140px;font:700 1.1rem Nunito,sans-serif;cursor:pointer;text-align:center}
+.hc .em{display:block;font-size:2.6rem;margin-bottom:4px}.hc small{display:block;color:var(--mute);font-weight:600;font-size:.85rem;margin-top:4px}
+.hc:active{transform:scale(.97)}
+#bar{max-width:640px;margin:0 auto;padding:8px 14px 0}
+#bar button{font:700 1rem Nunito,sans-serif;background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:14px;padding:8px 14px;min-height:44px;cursor:pointer}
+button:focus-visible{outline:4px solid var(--star);outline-offset:2px}
+.app[hidden],#home[hidden],#bar[hidden]{display:none!important}
+</style></head><body>
+<div id="bar" hidden><button data-go="home">← Academy home</button></div>
+<div id="home"><h1>🚀 Space Academy</h1><p class="sub">Learning for the little astronaut, and a log for you.</p><h2>For him</h2><div class="grid"><button class="hc" data-go="quest"><span class="em">🌌</span>Space Quest<small>Ask, guess, find out, spell</small></button><button class="hc" data-go="math"><span class="em">🪐</span>Space Math<small>Missions that match his level</small></button></div><h2>For you</h2><div class="grid"><button class="hc" data-go="log"><span class="em">📒</span>Learning Log<small>Skills, hours, portfolio</small></button><button class="hc" data-go="check"><span class="em">📝</span>Check-ups<small>Math and reading</small></button></div></div>
+<div class="app" id="app-quest" hidden><div id="h-quest"></div></div>
+<div class="app" id="app-math" hidden><div id="h-math"></div></div>
+<div class="app" id="app-log" hidden><div id="h-log"></div></div>
+<template id="t-quest"><style>
+:host{display:block;--bg:#EEEAFE;--card:#FFFFFF;--ink:#1B1740;--mute:#5A557E;--pri:#5B3FA6;--onpri:#FFFFFF;--hot:#C94F0F;--line:#D4CCF5;--ok:#17805D;--star:#F2B544;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:host{--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--hot:#FF8A3D;--line:#2D3480;--ok:#6FE3C1;color-scheme:dark}}
+:host([data-theme="dark"]){--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--hot:#FF8A3D;--line:#2D3480;--ok:#6FE3C1;color-scheme:dark}
+*{box-sizing:border-box}
+
+.wrap{margin:0;background:var(--bg);color:var(--ink);font:700 18px/1.4 Nunito,system-ui,sans-serif;min-height:100vh}
+@media (prefers-color-scheme:dark){.wrap{background-image:radial-gradient(2px 2px at 20px 30px,#fff8,transparent),radial-gradient(2px 2px at 90px 120px,#fff6,transparent),radial-gradient(1.5px 1.5px at 160px 60px,#fff9,transparent);background-size:200px 200px}}
+main{max-width:560px;margin:0 auto;padding:14px 14px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1,h2,h3{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;margin:0}
+h1{font-size:1.6rem}h2{font-size:1.4rem;margin:6px 0 8px}h3{font-size:1.1rem;margin:12px 0 6px}
+p{margin:6px 0}
+.mute{color:var(--mute);font-size:.9rem}
+.prog{display:flex;gap:6px;margin:12px 0 4px}.prog i{flex:1;height:10px;border-radius:99px;background:var(--line)}.prog i.on{background:var(--hot)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mc,.opt,.btn{font:700 1.05rem Nunito,sans-serif;cursor:pointer;border-radius:18px;color:var(--ink)}
+.mc{background:var(--card);border:3px solid var(--line);padding:12px 10px;min-height:128px;text-align:center}
+.mc .em{display:block;font-size:2.4rem;margin-bottom:4px}
+.opt{display:block;width:100%;background:var(--card);border:3px solid var(--line);padding:16px;margin:10px 0;text-align:left;min-height:64px}
+.btn{background:var(--pri);color:var(--onpri);border:3px solid var(--pri);padding:14px 20px;min-height:56px;margin:10px 8px 0 0}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.mc:active,.opt:active,.btn:active{transform:scale(.97)}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:4px solid var(--star);outline-offset:2px}
+.big{font-size:4.2rem;text-align:center;line-height:1.1}
+.fact{background:var(--card);border:3px solid var(--ok);border-radius:18px;padding:12px 14px;margin:10px 0}
+.card{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:12px 14px;margin:10px 0}
+canvas{width:100%;border:3px solid var(--line);border-radius:14px;touch-action:none;background:#fff;display:block}
+.pal{display:flex;gap:10px;align-items:center;margin:8px 0}.pal button{width:44px;height:44px;border-radius:50%;border:3px solid var(--line);cursor:pointer}
+.slots{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.slot{width:52px;height:64px;border:3px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;font:600 2rem Fredoka,sans-serif;background:var(--card)}
+.slot.f{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.tiles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tile{width:64px;height:64px;border-radius:16px;border:3px solid var(--pri);background:var(--pri);color:var(--onpri);font:600 2rem Fredoka,sans-serif;cursor:pointer}
+.tile:disabled{opacity:.25;cursor:default}
+.no{animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.no{animation:none;outline:4px solid var(--hot)}}
+input,textarea{width:100%;font:inherit;padding:12px;border-radius:12px;border:3px solid var(--line);background:var(--bg);color:var(--ink);margin-top:4px}
+textarea{min-height:130px}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:10px}.gal img{width:100%;border-radius:10px;border:2px solid var(--line);display:block}
+.snd{background:transparent;border:3px solid var(--line);border-radius:99px;width:48px;height:48px;font-size:1.3rem;cursor:pointer}
+.back{margin:0 0 4px;min-height:48px;padding:8px 16px}
+</style><div class="wrap">
+<main>
+<header><h1>🚀 Space Quest</h1><button class="snd" data-act="snd" aria-label="Turn sound on or off" id="snd">🔊</button></header>
+<div id="prog"></div>
+<div id="v"></div>
+</main>
+</div></template>
+<template id="t-math"><style>
+:host{display:block;--bg:#EEEAFE;--card:#FFFFFF;--ink:#1B1740;--mute:#5A557E;--pri:#5B3FA6;--onpri:#FFFFFF;--hot:#C94F0F;--line:#D4CCF5;--ok:#17805D;--bad:#B3261E;--star:#F2B544;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:host{--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--hot:#FF8A3D;--line:#2D3480;--ok:#6FE3C1;--bad:#FF8B84;color-scheme:dark}}
+:host([data-theme="dark"]){--bg:#0B0E2B;--card:#171C4A;--ink:#F4F2FF;--mute:#B4B0E0;--pri:#9B82F0;--onpri:#0B0E2B;--hot:#FF8A3D;--line:#2D3480;--ok:#6FE3C1;--bad:#FF8B84;color-scheme:dark}
+*{box-sizing:border-box}
+
+.wrap{margin:0;background:var(--bg);color:var(--ink);font:700 18px/1.4 Nunito,system-ui,sans-serif;min-height:100vh}
+@media (prefers-color-scheme:dark){.wrap{background-image:radial-gradient(2px 2px at 20px 30px,#fff8,transparent),radial-gradient(2px 2px at 90px 120px,#fff6,transparent),radial-gradient(1.5px 1.5px at 160px 60px,#fff9,transparent);background-size:200px 200px}}
+main{max-width:560px;margin:0 auto;padding:14px 14px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1,h2,h3{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;margin:0}
+h1{font-size:1.6rem}h2{font-size:1.4rem;margin:6px 0 8px}h3{font-size:1.1rem;margin:12px 0 6px}
+p{margin:6px 0}.mute{color:var(--mute);font-size:.9rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mc,.opt,.btn,.snd{font:700 1.05rem Nunito,sans-serif;cursor:pointer;border-radius:18px;color:var(--ink)}
+.mc{background:var(--card);border:3px solid var(--line);padding:12px 10px;min-height:120px;text-align:center}
+.mc .em{display:block;font-size:2.3rem}
+.opt{background:var(--card);border:3px solid var(--line);padding:16px;margin:8px 0;min-height:64px;width:100%;font-size:1.3rem}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.row3 .opt{margin:8px 0;text-align:center;font-size:1.6rem;padding:14px 4px}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.opt.no{border-color:var(--bad)}
+.btn{background:var(--pri);color:var(--onpri);border:3px solid var(--pri);padding:14px 20px;min-height:56px;margin:10px 8px 0 0}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.mc:active,.opt:active,.btn:active{transform:scale(.97)}
+button:focus-visible{outline:4px solid var(--star);outline-offset:2px}
+.big{font-size:2.6rem;text-align:center;line-height:1.25;word-break:break-word;margin:8px 0}
+.q{font:600 1.5rem Fredoka,sans-serif;text-align:center;margin:6px 0}
+.card{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:12px 14px;margin:10px 0}
+.prog{display:flex;gap:6px;margin:10px 0}.prog i{flex:1;height:10px;border-radius:99px;background:var(--line)}.prog i.on{background:var(--hot)}
+.lv{color:var(--star)}
+.snd{background:transparent;border:3px solid var(--line);border-radius:99px;width:48px;height:48px;font-size:1.3rem}
+.back{margin:0 0 4px;min-height:48px;padding:8px 16px}
+textarea{width:100%;min-height:120px;font:inherit;padding:12px;border-radius:12px;border:3px solid var(--line);background:var(--bg);color:var(--ink)}
+.res{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line)}.res:first-of-type{border-top:0}
+</style><div class="wrap">
+<main>
+<header><h1>🚀 Space Math</h1><button class="snd" data-act="snd" aria-label="Turn sound on or off">🔊</button></header>
+<div id="v"></div>
+</main>
+</div></template>
+<template id="t-log"><style>
+:host{display:block;--bg:#F2F7F4;--card:#FFFFFF;--ink:#1F2F38;--mute:#5C6B73;--line:#D7E3DD;--pri:#2F6F8F;--onpri:#FFFFFF;--sun:#F2B544;--good:#2E8B57;--c1:#2F6F8F;--c2:#B5527A;--c3:#7A5CB8;--c4:#2E8B57;--c5:#C9822B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:host{--bg:#14201F;--card:#1D2D2C;--ink:#E8F1EE;--mute:#9DB1AC;--line:#2C4140;--pri:#6DB5D6;--onpri:#10222B;--sun:#F2B544;--good:#62C38E;--c1:#6DB5D6;--c2:#E48DB1;--c3:#B39CF0;--c4:#62C38E;--c5:#E9B068;color-scheme:dark}}
+:host([data-theme="dark"]){--bg:#14201F;--card:#1D2D2C;--ink:#E8F1EE;--mute:#9DB1AC;--line:#2C4140;--pri:#6DB5D6;--onpri:#10222B;--c1:#6DB5D6;--c2:#E48DB1;--c3:#B39CF0;--c4:#62C38E;--c5:#E9B068;color-scheme:dark}
+*{box-sizing:border-box}
+
+.wrap{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 14px 48px}
+h1,h2,h3{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;margin:0}
+h1{font-size:1.7rem}h2{font-size:1.2rem;margin-bottom:8px}h3{font-size:1.05rem}
+.sub{color:var(--mute);margin:2px 0 14px}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+nav button{padding:10px 4px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:600 .95rem Nunito,sans-serif;cursor:pointer}
+nav button[aria-current="true"]{background:var(--pri);border-color:var(--pri);color:var(--onpri)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+label{display:block;font-weight:700;font-size:.9rem;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:70px;resize:vertical}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.btn{display:inline-block;width:auto;padding:11px 16px;border:0;border-radius:12px;background:var(--pri);color:var(--onpri);font:700 1rem Nunito,sans-serif;cursor:pointer;margin-top:12px}
+.btn.alt{background:transparent;color:var(--pri);border:2px solid var(--pri)}
+.btn.small{padding:6px 10px;font-size:.85rem;margin:0}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.chip{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:700;border:2px solid var(--line);color:var(--mute);white-space:nowrap}
+.chip.intro{border-color:var(--c5);color:var(--c5)}.chip.prac{border-color:var(--pri);color:var(--pri)}.chip.mast{background:var(--good);border-color:var(--good);color:#fff}
+.dots{display:inline-flex;gap:4px;margin-right:8px;vertical-align:middle}.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}.dots i.on{background:var(--good);border-color:var(--good)}
+.skill{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+.skill:first-of-type{border-top:0}.skill .nm{flex:1}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat b{display:block;font:600 1.6rem Fredoka,sans-serif;color:var(--pri)}.stat span{font-size:.8rem;color:var(--mute)}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--good);border-radius:99px}
+.entry{padding:10px 0;border-top:1px solid var(--line)}.entry:first-child{border-top:0}
+.meta{color:var(--mute);font-size:.85rem}
+.tag{font-weight:700}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700}
+.empty{color:var(--mute);padding:8px 0}
+</style><div class="wrap">
+<main>
+<h1>Learning Log</h1>
+<p class="sub">Log it, track mastery, and keep the proof.</p>
+<nav id="tabs"></nav>
+<div id="view"></div>
+</main>
+</div></template>
+<script>
+(function(){
+const ids=['quest','math','log'];
+window.LD=function(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+ids.forEach(function(id){const h=document.getElementById('h-'+id),sr=h.attachShadow({mode:'open'});sr.appendChild(document.getElementById('t-'+id).content.cloneNode(true))});
+document.addEventListener('click',function(){window.__go=true},true);
+})();
+</script>
+<script>(function(ROOT){
+
+const Q=[
+{e:'🌙',q:'Why does the Moon change shape?',a:['Space bugs nibble it','We see different parts of its sunny side','It melts and grows back'],c:1,f:'The Moon does not really change. It circles Earth, and we see different parts of its sunny side as it moves.',w:'moon'},
+{e:'☀️',q:'How hot is the Sun?',a:['Warm like a bath','Hot like an oven','Way hotter than any oven'],c:2,f:'The surface of the Sun is about 10,000 degrees Fahrenheit. That is far hotter than any oven!',w:'sun'},
+{e:'⭐',q:'Why do stars twinkle?',a:['They blink on and off','Moving air makes their light wiggle','They are waving at us'],c:1,f:'Starlight goes through moving air around Earth. The wiggling air makes the light look like it twinkles.',w:'star'},
+{e:'🔴',q:'Why is Mars red?',a:['Rusty dust on the ground','It is painted','It is covered in tomatoes'],c:0,f:'Mars has lots of rusty dust, so it looks red. That is why it is called the Red Planet.',w:'mars'},
+{e:'🚀',q:'How does a rocket get into space?',a:['It flaps big wings','Hot gas shoots down and pushes it up','It floats like a balloon'],c:1,f:'A rocket blasts hot gas down. The push makes the rocket go up and up.',w:'rocket'},
+{e:'🌍',q:'Why do things fall down?',a:['Gravity pulls them','The floor sucks them','They get tired'],c:0,f:'Gravity is a pull from Earth. It pulls things toward the ground and keeps the Moon circling us.',w:'fall'},
+{e:'🪐',q:'Which planet has big, bright rings?',a:['Saturn','Mars','Earth'],c:0,f:'Saturn has big, bright rings made of ice and rock bits that circle the planet.',w:'ring'},
+{e:'🌑',q:'Why is it dark at night?',a:['The Sun goes out','Our side of Earth turns away from the Sun','Clouds cover everything'],c:1,f:'Earth spins around like a top. When our side turns away from the Sun, it is night.',w:'dark'},
+{e:'🧑‍🚀',q:'Why do astronauts wear spacesuits?',a:['They are cozy pajamas','Suits give air and keep them safe','To look silly'],c:1,f:'Space has no air, and it gets very hot and very cold. A spacesuit gives astronauts air and keeps them safe.',w:'suit'},
+{e:'🌌',q:'What is the Milky Way?',a:['A candy bar in space','A giant swirl of stars where we live','A river on the Moon'],c:1,f:'The Milky Way is a giant swirl of stars. Our Sun and Earth are inside it.',w:'sky'},
+{e:'☄️',q:'What is a comet?',a:['A ball of ice and dust with a glowing tail','A flying bird','A very big star'],c:0,f:'A comet is a ball of ice and dust. Near the Sun it warms up and grows a long, glowing tail.',w:'comet'},
+{e:'🌠',q:'What is a shooting star?',a:['A star falling down','A space rock burning up in our air','A tiny rocket'],c:1,f:'It is a small space rock. It zooms into our air and burns up, making a bright streak.',w:'rock'},
+{e:'🌎',q:'How long does Earth take to go around the Sun?',a:['One day','One year','One hour'],c:1,f:'Earth travels all the way around the Sun in one year. That is about 365 days.',w:'year'},
+{e:'🌕',q:'Can we breathe on the Moon?',a:['Yes, just like Earth','No, there is no air to breathe','Only on Sundays'],c:1,f:'The Moon has no air we can breathe, so astronauts carry their own air.',w:'air'},
+{e:'🛰️',q:'What does a satellite do?',a:['Helps with maps, phones and weather pictures','Makes snow','Paints the Moon'],c:0,f:'Satellites circle Earth. They help with maps, phone signals, and pictures of the weather.',w:'map'},
+{e:'👨‍🚀',q:'Who was the first person to walk on the Moon?',a:['Neil Armstrong','A robot','A dinosaur'],c:0,f:'Neil Armstrong was the first person to walk on the Moon, in 1969.',w:'walk'},
+{e:'💨',q:'Which planet is closest to the Sun?',a:['Mercury','Neptune','Jupiter'],c:0,f:'Mercury is the closest planet to the Sun. It is small and zooms around fast.',w:'zoom'},
+{e:'🌪️',q:'What is the Great Red Spot on Jupiter?',a:['A giant storm','A big volcano','A painted dot'],c:0,f:'It is a huge storm that has been spinning for a very long time. It is bigger than Earth!',w:'spot'},
+{e:'8️⃣',q:'How many planets circle our Sun?',a:['Eight','Two','One hundred'],c:0,f:'Eight planets circle our Sun, and Earth is one of them.',w:'planet'},
+{e:'🌞',q:'What is the Sun?',a:['A star','A planet','A giant lightbulb'],c:0,f:'The Sun is a star, the closest one to Earth. It looks so big and bright because it is near.',w:'glow'},
+{e:'🔭',q:'What does a telescope do?',a:['Makes faraway things look closer','Makes it rain','Plays music'],c:0,f:'A telescope collects light, so faraway planets and stars look bigger and clearer.',w:'look'},
+{e:'🌱',q:'Can plants grow in space?',a:['Yes, astronauts have grown lettuce and flowers','No, never','Only upside down'],c:0,f:'Astronauts have grown lettuce and flowers on the space station, using special lights and water.',w:'plant'},
+{e:'🎈',q:'Why do astronauts float on the space station?',a:['It is always falling around Earth, so everything floats','They wear magic shoes','There is water inside'],c:0,f:'The space station is always falling around Earth, so astronauts and everything inside it float.',w:'float'}];
+const METH=[['👨‍👩‍👧','Ask a grown-up'],['📖','Read a book'],['📺','Watch a video'],['🔭','Go look outside'],['🧪','Try it out']];
+const STEPS=['Wonder','Guess','Find out','Tell','Check','Spell'];
+const IDX={guess:1,how:2,found:3,check:4,spell:5};
+const $=s=>ROOT.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let D=load(),cur=null,screen='home',sound=true,drew=false,cx=null,col='#5B3FA6',tmpOwn={q:'',w:''};
+function load(){try{const v=JSON.parse(localStorage.getItem('sq.v1'));if(v&&v.log)return v}catch(e){}return{log:[],stars:0}}
+function save(){try{localStorage.setItem('sq.v1',JSON.stringify(D))}catch(e){try{D.log.forEach(l=>{delete l.art});localStorage.setItem('sq.v1',JSON.stringify(D))}catch(x){}}}
+function say(t){if(!sound||!window.speechSynthesis||!window.__go)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.85;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+function go(s){screen=s;render()}
+const isDone=x=>D.log.some(l=>l.q===x.q);
+const BACK={own:'home',guess:'home',how:'guess',found:'how',check:'found',spell:'check',gallery:'home',grown:'home'};
+
+function render(){
+let h='',sp='';const q=cur&&cur.q;
+if(screen==='home'){
+sp='Pick a mission!';
+h='<h2>Pick a mission</h2><button class="btn" data-act="surprise" style="margin:0 0 10px">🎲 Surprise me!</button><div class="grid">'+Q.map((x,i)=>'<button class="mc" data-act="pick" data-i="'+i+'"><span class="em">'+x.e+'</span>'+(isDone(x)?'✅ ':'')+esc(x.q)+'</button>').join('')+'<button class="mc" data-act="own"><span class="em">✨</span>Ask my own question</button></div><button class="btn alt" data-act="gallery" style="margin-top:14px">⭐ My stars ('+D.stars+')</button><button class="btn alt" data-act="grown">Grown-up</button>'}
+else if(screen==='own'){
+h='<h2>Grown-up: add a question</h2><p class="mute">Type the question your child asked. Add a spelling word if you like (letters only).</p><label for="oq">Question</label><input id="oq" value="'+esc(tmpOwn.q)+'"><label for="ow">Spelling word (optional)</label><input id="ow" value="'+esc(tmpOwn.w)+'" maxlength="10" autocapitalize="none"><button class="btn" data-act="startown">Start mission</button><button class="btn alt" data-act="home">Back</button>'}
+else if(screen==='guess'){
+sp=q.q+' What do you think?';
+h='<div class="big">'+q.e+'</div><h2>'+esc(q.q)+'</h2><p>What do you think?</p>'+(q.a?q.a.map((a,i)=>'<button class="opt" data-act="guess" data-i="'+i+'">'+esc(a)+'</button>').join(''):'<p>Say your guess out loud.</p><button class="opt" data-act="guess" data-i="-1">I said my guess! 🎤</button>')}
+else if(screen==='how'){
+sp='How could we find out? Pick one, then do it together.';
+h='<h2>How can we find out?</h2><p class="mute">Pick one, then do it together.</p>'+METH.map((m,i)=>'<button class="opt" data-act="how" data-i="'+i+'">'+m[0]+'  '+m[1]+'</button>').join('')}
+else if(screen==='found'){
+sp=(q.f?'Mission Control says: '+q.f+' ':'Tell your grown-up what you found out! ')+'Now draw what you learned!';
+h=(q.f?'<div class="fact"><b>Mission Control says</b><p>'+esc(q.f)+'</p></div>':'<p>Tell your grown-up what you found out!</p>')+'<h3>Draw what you learned</h3><canvas id="cv" width="320" height="200" tabindex="0" aria-label="Drawing space"></canvas><div class="pal">'+['#5B3FA6','#C94F0F','#17805D','#1B6FD1','#E0A100','#222222'].map(c=>'<button data-act="col" data-c="'+c+'" style="background:'+c+'" aria-label="Color"></button>').join('')+'<button class="btn alt" data-act="clr" style="margin:0;min-height:44px;padding:6px 14px">Clear</button></div><button class="btn" data-act="tell">I’m done! 🚀</button>'}
+else if(screen==='check'){
+if(q.a){const r=cur.right;sp=(r?'Your guess was right! ':'Good try! Now you know. ')+'The answer: '+q.a[q.c];
+h='<div class="big">'+(r?'🎉':'🤔')+'</div><h2>'+(r?'Your guess was right!':'Good try! Now you know.')+'</h2><div class="fact"><p>'+esc(q.a[q.c])+'</p></div><button class="btn" data-act="next">Next</button>'}
+else{sp='Was your guess right?';h='<h2>Was your guess right?</h2><button class="opt" data-act="self" data-v="1">👍 Yes!</button><button class="opt" data-act="self" data-v="0">🤔 Not quite, and now I know more</button>'}}
+else if(screen==='spell'){
+const s=cur.sp,w=q.w;sp='Spell the secret word: '+w;
+h='<h2>Spell the secret word</h2><p class="mute">Tap the letters in order to unlock your star.</p><div class="big">'+q.e+'</div><div class="slots" aria-live="polite">'+w.split('').map((c,i)=>'<span class="slot'+(i<s.n?' f':'')+'">'+(i<s.n?c.toUpperCase():'')+'</span>').join('')+'</div><div class="tiles">'+s.t.map((t,i)=>'<button class="tile" data-act="tile" data-i="'+i+'"'+(t.u?' disabled':'')+'>'+t.l.toUpperCase()+'</button>').join('')+'</div><div style="text-align:center"><button class="btn alt" data-act="hear">🔊 Hear the word</button></div>'}
+else if(screen==='done'){
+sp='Mission complete! You earned a star!';
+h='<div class="big">🌟</div><h2 style="text-align:center">Mission complete!</h2><p style="text-align:center">You earned a star. That is '+D.stars+' so far!</p><div style="text-align:center"><button class="btn" data-act="home">Another mission</button><button class="btn alt" data-act="grown">Grown-up note</button></div>'}
+else if(screen==='gallery'){
+sp='Here are your stars!';
+h='<h2>⭐ My stars ('+D.stars+')</h2>'+(D.log.length?'<div class="gal">'+D.log.slice().reverse().map(l=>'<div class="card">'+(l.art?'<img src="'+esc(l.art)+'" alt="Drawing">':'')+'<p>'+esc(l.q)+'</p><p class="mute">'+(l.right?'Guess was right ':'Learned something new ')+(l.sp==='first'?'· Spelled it first try':'')+'</p></div>').join('')+'</div>':'<p>No stars yet. Finish a mission to earn one!</p>')+'<button class="btn" data-act="home">Back</button>'}
+else if(screen==='grown'){
+const t=D.log.slice(-5).reverse().map(summ).join('\n\n');
+h='<h2>Grown-up note</h2><p class="mute">Copy this into the Learning Log. Suggested: Science and Spelling, about 15 minutes. Mark “On his own” only if he did it without help.</p><textarea id="gt" readonly>'+esc(t||'No missions finished yet.')+'</textarea><button class="btn" data-act="copy">Copy</button><button class="btn alt" data-act="home">Back</button>'}
+$('#v').innerHTML=(BACK[screen]?'<button class="btn alt back" data-act="back">← Back</button>':'')+h;
+const i=IDX[screen];$('#prog').innerHTML=i?'<div class="prog" role="img" aria-label="Step '+(i+1)+' of 6, '+STEPS[i]+'">'+STEPS.map((s,k)=>'<i class="'+(k<=i?'on':'')+'"></i>').join('')+'</div><p class="mute">'+STEPS[i]+'</p>':'';
+if(screen==='found')initCv();
+if(sp)say(sp);window.scrollTo(0,0)}
+
+function summ(l){return 'Question Quest (Science and Spelling): “'+l.q+'” His guess was '+(l.right?'right.':'not quite right.')+' Found out by: '+l.m+'.'+(l.w?' Spelled “'+l.w+'” '+(l.sp==='first'?'on the first try.':'with a few tries.'):'')+(l.art?' Drew a picture of what he learned.':'')}
+
+function initCv(){const c=$('#cv');cx=c.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,320,200);cx.lineWidth=5;cx.lineCap='round';cx.lineJoin='round';drew=false;let dn=false;
+const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*320/r.width,(e.clientY-r.top)*200/r.height]};
+c.onpointerdown=e=>{dn=true;drew=true;const p=pt(e);cx.strokeStyle=col;cx.beginPath();cx.moveTo(p[0],p[1]);cx.lineTo(p[0]+.1,p[1]);cx.stroke();c.setPointerCapture(e.pointerId)};
+c.onpointermove=e=>{if(!dn)return;const p=pt(e);cx.lineTo(p[0],p[1]);cx.stroke()};
+c.onpointerup=c.onpointercancel=()=>{dn=false}}
+
+function startSpell(){const w=cur.q.w;let t=w.split('').map(l=>({l,u:false}));if(w.length>1){let k=0;do{t.sort(()=>Math.random()-.5);k++}while(t.map(x=>x.l).join('')===w&&k<10)}cur.sp={n:0,t,bad:0};go('spell')}
+function finish(){const q=cur.q;D.log.push({id:Date.now(),d:window.LD(),q:q.q,right:!!cur.right,m:cur.m,w:q.w||'',sp:cur.sp?(cur.sp.bad===0?'first':'later'):'',art:cur.art||''});D.stars++;save();go('done')}
+
+ROOT.addEventListener('click',e=>{
+const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act,i=+t.dataset.i;
+if(a==='snd'){sound=!sound;t.textContent=sound?'🔊':'🔇';if(!sound&&window.speechSynthesis)speechSynthesis.cancel();return}
+if(a==='back')return go(BACK[screen]);
+if(a==='surprise'){const left=Q.filter(x=>!isDone(x)),p=left.length?left:Q;cur={q:p[Math.floor(Math.random()*p.length)]};return go('guess')}
+if(a==='home'){cur=null;return go('home')}
+if(a==='pick'){cur={q:Q[i]};return go('guess')}
+if(a==='own')return go('own');
+if(a==='startown'){const q=$('#oq').value.trim(),w=$('#ow').value.trim().toLowerCase().replace(/[^a-z]/g,'');tmpOwn={q:'',w:''};if(!q)return;cur={q:{e:'✨',q,w}};return go('guess')}
+if(a==='guess'){cur.guess=i;cur.right=cur.q.a?i===cur.q.c:null;return go('how')}
+if(a==='how'){cur.m=METH[i][1];return go('found')}
+if(a==='col'){col=t.dataset.c;return}
+if(a==='clr'){cx.fillStyle='#fff';cx.fillRect(0,0,320,200);drew=false;return}
+if(a==='tell'){cur.art=drew?$('#cv').toDataURL('image/jpeg',.6):'';return go('check')}
+if(a==='self'){cur.right=t.dataset.v==='1';return cur.q.w?startSpell():finish()}
+if(a==='next')return cur.q.w?startSpell():finish();
+if(a==='hear')return say(cur.q.w);
+if(a==='tile'){const s=cur.sp,tl=s.t[i],w=cur.q.w;if(tl.l===w[s.n]){tl.u=true;s.n++;say(tl.l);if(s.n===w.length){render();setTimeout(finish,700);return}render()}else{s.bad++;t.classList.add('no');setTimeout(()=>t.classList.remove('no'),350);say('Try another letter')}return}
+if(a==='gallery')return go('gallery');
+if(a==='grown')return go('grown');
+if(a==='copy'){const ta=$('#gt');ta.select();try{navigator.clipboard.writeText(ta.value)}catch(x){try{document.execCommand('copy')}catch(y){}}t.textContent='Copied!';return}
+});
+ROOT.addEventListener('input',e=>{if(e.target.id==='oq')tmpOwn.q=e.target.value;if(e.target.id==='ow')tmpOwn.w=e.target.value});
+render();
+
+})(document.getElementById("h-quest").shadowRoot);</script>
+<script>(function(ROOT){
+
+const $=s=>ROOT.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=a=>a[R(0,a.length-1)];
+const nums=n=>[String(n),String(n+1),String(n>0?n-1:n+2)];
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+const AR={math:{count:['🌙','Counting'],add:['☀️','Adding'],sub:['🪐','Subtracting'],shapes:['⭐','Shapes'],tm:['🚀','Time and money']},read:{letters:['','Letters'],sounds:['','Sounds'],rhyme:['','Rhyming'],words:['','Word reading'],sent:['','Sentences']}};
+const DESC={count:['counts objects to 5','counts objects to 10','skip counts by 2s, 5s and 10s','compares numbers to 100'],add:['adds within 5','adds within 10','adds within 20','adds to two-digit numbers'],sub:['subtracts within 5','subtracts within 10','subtracts within 20','subtracts bigger numbers within 20'],shapes:['names circle, square, triangle','counts sides','knows corners','knows more shapes'],tm:['reads time to the hour','knows penny and nickel','knows dime and values','swaps coins'],letters:['finds capital letters','finds small letters','matches big and small','knows first-letter sounds'],sounds:['hears beginning sounds','hears more beginning sounds','hears ending sounds','hears vowel sounds'],rhyme:['rhymes easy words','rhymes more words','rhymes harder words','spots what does not rhyme'],words:['reads 3-letter words','reads short vowel words','reads blends and digraphs','reads tricky words'],sent:['reads a short sentence','reads and answers a what question','reads a longer sentence','reads two sentences and explains why']};
+const POOL={
+shapes:[[['Tap the circle.','🔵','🟦','🔺'],['Tap the square.','🟦','🔵','🔺'],['Tap the triangle.','🔺','🔵','🟦']],[['How many sides does a triangle have?','3','4','5'],['How many sides does a square have?','4','3','6']],[['Which shape has no corners?','Circle','Square','Triangle'],['Which shape has 3 corners?','Triangle','Square','Circle']],[['Which shape has 6 sides?','Hexagon','Pentagon','Square'],['How many corners does a rectangle have?','4','3','2']],[['Which solid shape is like a ball?','Sphere','Cube','Cone'],['Which solid shape is like a box?','Cube','Sphere','Cylinder']]],
+tm:[[['🕒 What time is it?','3:00','12:00','6:00'],['🕕 What time is it?','6:00','12:00','3:00']],[['How many cents is a penny worth?','1','5','10'],['How many cents is a nickel worth?','5','1','10']],[['Which is worth more?','A dime','A nickel','A penny'],['How many cents is a dime worth?','10','5','25']],[['How many nickels make 10 cents?','2','5','10'],['How many pennies make a nickel?','5','10','2']],[['🕧 What time is it?','12:30','6:12','12:06'],['How many cents is a quarter worth?','25','20','50']]],
+letters:[[['Tap the letter B.','B','D','P'],['Tap the letter M.','M','W','N']],[['Tap the small letter g.','g','q','y'],['Tap the small letter b.','b','d','p']],[['Which small letter goes with the big letter R?','r','n','h'],['Which small letter goes with the big letter H?','h','n','b']],[['Which letter makes the first sound in “jump”?','j','g','y'],['Which letter makes the first sound in “kite”?','k','c','t']]],
+sounds:[[['Which picture starts like “sun”?','🧦 sock','🐶 dog','🐱 cat'],['Which picture starts like “ball”?','🐻 bear','🐟 fish','🍎 apple']],[['Which picture starts like “top”?','🐯 tiger','🐸 frog','🐑 sheep'],['Which picture starts like “moon”?','🐭 mouse','🐸 frog','🐶 dog']],[['Which picture ends like “cat”?','🎩 hat','🐶 dog','🌞 sun'],['Which picture ends like “pig”?','🐶 dog','🎩 hat','🐟 fish']],[['Which word has the short a sound, like “cat”?','🦇 bat','🐷 pig','🌞 sun'],['Which word has the short o sound, like “hop”?','🧦 sock','🐱 cat','🐷 pig']]],
+rhyme:[[['Which rhymes with cat?','🎩 hat','🐶 dog','🌞 sun']],[['Which rhymes with dog?','🪵 log','🐱 cat','🐷 pig']],[['Which rhymes with star?','🚗 car','🌙 moon','☀️ sun']],[['Which does NOT rhyme with bed?','🚌 bus','🔴 red','🤕 head']]],
+words:[[['cat','cat','cot','cut'],['dog','dog','dig','dug']],[['sit','sit','sat','set'],['red','red','rid','rod']],[['ship','ship','shop','chip'],['stop','stop','step','top']],[['said','said','sad','say'],['there','there','three','where']]],
+sent:[[['Read it. Who sat?','🐱','🐶','🐸','The cat sat.']],[['Read it. What ran?','🐶','📦','🐱','A dog ran to the box.']],[['Read it. What color is the hat?','🔴','🔵','🟢','Mom put the red hat on the big dog.']],[['Read it. Why was Sam sad?','He lost his ice cream','He was sleepy','He had a new hat','Sam was sad. His ice cream fell on the ground.']]]};
+const MATH={
+count:l=>{if(l==1){const n=R(2,5);return{s:'How many?',p:'⭐'.repeat(n),o:nums(n)}}if(l==2){const n=R(6,10);return{s:'How many?',p:'🌙'.repeat(n),o:nums(n)}}
+if(l==3){const st=P([2,5,10]),a=st*R(1,3);return{s:'Count by '+st+'s. What comes next?',p:[a,a+st,a+2*st].join(', ')+', ?',o:nums(a+3*st)}}
+if(l==4){const x=R(20,90),y=x+R(5,25),f=R(0,1);return{s:'Which number is bigger?',p:(f?y:x)+' or '+(f?x:y),o:[String(y),String(x),'Same']}}
+const n=R(11,80);return{s:'What is 10 more than '+n+'?',o:nums(n+10)}},
+add:l=>{let a,b;if(l==1){a=R(1,2);b=R(1,3);return{s:'How many in all?',p:'🍎'.repeat(a)+' + '+'🍎'.repeat(b),o:nums(a+b)}}
+if(l==2){a=R(2,6);b=R(2,10-a)}else if(l==3){a=R(6,9);b=R(11-a,9)}else if(l==4){a=R(10,20);b=R(3,9)}else{a=R(1,4)*10;b=R(1,4)*10}
+return{s:a+' + '+b+' = ?',o:nums(a+b)}},
+sub:l=>{let a,b;if(l==1){a=R(2,5);b=R(1,a-1);return{s:'How many are left?',p:'🍎'.repeat(a)+' take away '+b,o:nums(a-b)}}
+if(l==2){a=R(4,10);b=R(1,a-1)}else if(l==3){a=R(11,16);b=R(2,9)}else if(l==4){a=R(14,20);b=R(6,9)}else{a=R(5,9)*10;b=R(1,4)*10}
+return{s:a+' − '+b+' = ?',o:nums(a-b)}}};
+function mk(sub,a,l){if(sub==='math'&&MATH[a])return MATH[a](l);const it=P(POOL[a][Math.min(l,POOL[a].length)-1]);
+if(a==='words')return{s:'Tap the word you hear.',say:it[0],o:it.slice(1)};
+if(a==='sent')return{s:it[0],p:it[4],o:it.slice(1,4),nosay:1};return{s:it[0],o:it.slice(1)}}
+
+let M=load(),screen='home',sound=true,L=null,AS=null;
+function load(){try{const v=JSON.parse(localStorage.getItem('sm.v1'));if(v&&v.lv)return v}catch(e){}return{lv:{count:1,add:1,sub:1,shapes:1,tm:1},asm:{},log:[]}}
+function save(){try{localStorage.setItem('sm.v1',JSON.stringify(M))}catch(e){}}
+function say(t){if(!sound||!window.speechSynthesis||!window.__go)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.85;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+const BACK={lesson:'home',lres:'home',gu:'home',asmintro:'gu',asmq:'gu',asmdone:'gu'};
+function go(s){screen=s;render()}
+const today=()=>new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+const stars=n=>'⭐'.repeat(n)+'☆'.repeat(5-n);
+
+function qView(it,sp,fb){const sh=it.o.length;const short=it.opts.every(x=>x.length<=9);
+return (it.p?'<div class="big">'+esc(it.p)+'</div>':'')+'<p class="q">'+esc(it.s)+'</p><div class="'+(short?'row3':'')+'">'+it.opts.map((o,i)=>{let c='opt';if(fb){if(o===it.o[0])c+=' ok';else if(i===L.ans)c+=' no'}return'<button class="'+c+'" data-act="'+sp+'" data-i="'+i+'"'+(fb?' disabled':'')+'>'+esc(o)+'</button>'}).join('')+'</div><button class="btn alt" data-act="hear">🔊 Hear it again</button>'}
+function nextItem(sub,a,l){const it=mk(sub,a,l);it.opts=shuf(it.o);return it}
+function speakItem(it){say(it.say||(it.nosay?it.s:it.s+(it.p&&!it.nosay?' '+it.p.replace(/[^\w\s+−,?]/g,''):'')))}
+
+function render(){
+let h='',it;
+if(screen==='home'){
+h='<h2>Pick a planet</h2><div class="grid">'+Object.keys(AR.math).map(a=>'<button class="mc" data-act="start" data-a="'+a+'"><span class="em">'+AR.math[a][0]+'</span>'+AR.math[a][1]+'<br><span class="lv">Level '+M.lv[a]+'</span></button>').join('')+'<button class="mc" data-act="gu"><span class="em">🧑‍🚀</span>Grown-up</button></div><p class="mute">Each mission is 5 questions. Get 4 right to level up!</p>'}
+else if(screen==='lesson'){
+it=L.item;h='<div class="prog" role="img" aria-label="Question '+(L.n+1)+' of 5">'+[0,1,2,3,4].map(i=>'<i class="'+(i<L.n+(L.ans!=null?1:0)?'on':'')+'"></i>').join('')+'</div><p class="mute">'+AR.math[L.a][1]+' · Level '+L.lv+'</p>'+qView(it,'ans',L.ans!=null)+(L.ans!=null?'<p class="q">'+(it.opts[L.ans]===it.o[0]?'🎉 Great job!':'The answer is '+esc(it.o[0])+'.')+'</p><button class="btn" data-act="nxt">'+(L.n==4?'Finish':'Next')+'</button>':'')}
+else if(screen==='lres'){
+const up=L.score>=4&&L.lv<5;h='<div class="big">'+(L.score>=4?'🌟':'💫')+'</div><h2 style="text-align:center">'+L.score+' out of 5!</h2><p style="text-align:center">'+(up?'Level up! You are now Level '+(L.lv+1)+'.':L.score>=4?'You finished the top level. Keep practicing!':'Nice try. Let’s practice this level again.')+'</p><div style="text-align:center"><button class="btn" data-act="start" data-a="'+L.a+'">Another mission</button><button class="btn alt" data-act="home">Planets</button></div>'}
+else if(screen==='gu'){
+h='<h2>Grown-up</h2><div class="card"><h3>Check what he knows</h3><p class="mute">Two short checks, 15 questions each. Sit beside him, read nothing for him, and let him tap. It is okay for him to say “I’m not sure.” Math missions then start where he is ready.</p><button class="btn" data-act="asm" data-s="math">Math check</button><button class="btn" data-act="asm" data-s="read">Reading check</button></div>';
+for(const s of ['math','read']){const r=M.asm[s];if(r)h+='<div class="card"><h3>'+(s==='math'?'Math':'Reading')+' results · '+esc(r.d)+'</h3>'+report(s,r.best).map(x=>'<div class="res"><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>').join('')+'</div>'}
+h+='<div class="card"><h3>Note for your Learning Log</h3><textarea id="gt" readonly>'+esc(note())+'</textarea><button class="btn" data-act="copy">Copy</button></div>'}
+else if(screen==='asmintro'){
+h='<h2>'+(AS.sub==='math'?'Math':'Reading')+' check</h2><p>15 questions. There is no feedback while he answers, so it stays low pressure. Let him try on his own, and tap “Not sure” if he does not know.</p>'+(AS.sub==='read'?'<p class="mute">Some questions have him read a word or sentence himself. Sound should be on.</p>':'')+'<button class="btn" data-act="begin">Start</button>'}
+else if(screen==='asmq'){
+it=AS.item;h='<div class="prog" role="img" aria-label="Question '+(AS.qn+1)+' of 15">'+Array.from({length:15},(_,i)=>'<i class="'+(i<=AS.qn?'on':'')+'"></i>').join('')+'</div><p class="mute">Question '+(AS.qn+1)+' of 15</p>'+qView(it,'aa',false)+'<button class="btn alt" data-act="aa" data-i="-1">Not sure</button>'}
+else if(screen==='asmdone'){
+h='<div class="big">🌟</div><h2 style="text-align:center">All done!</h2><p style="text-align:center">Great work. Grown-up, see the results below.</p>'+'<div class="card">'+report(AS.sub,AS.best).map(x=>'<div class="res"><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>').join('')+'</div>'+(AS.sub==='math'?'<p class="mute">Math missions will now start at the right level for each planet.</p>':'<p class="mute">Saved. Reading lessons will use this when we build them.</p>')+'<button class="btn" data-act="gu">Back to grown-up</button>'}
+$('#v').innerHTML=(BACK[screen]?'<button class="btn alt back" data-act="back">← Back</button>':'')+h;
+if(screen==='lesson'&&L.ans==null)speakItem(L.item);if(screen==='asmq')speakItem(AS.item);window.scrollTo(0,0)}
+
+function report(s,best){return Object.keys(AR[s]).map(a=>[AR[s][a][1],best[a]?'Level '+best[a]+' of 4: '+DESC[a][best[a]-1]:'Starting at the beginning'])}
+function note(){let t='';for(const s of ['math','read']){const r=M.asm[s];if(r)t+=(s==='math'?'Math':'Reading')+' check ('+r.d+'): '+report(s,r.best).map(x=>x[0]+' – '+x[1]).join('; ')+'.\n\n'}
+const l=M.log.slice(-5).reverse();if(l.length)t+='Recent math missions: '+l.map(x=>AR.math[x.a][1]+' level '+x.lv+', '+x.sc+'/5').join('; ')+'.';return t||'No results yet.'}
+
+ROOT.addEventListener('click',e=>{
+const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act,i=+t.dataset.i;
+if(a==='snd'){sound=!sound;t.textContent=sound?'🔊':'🔇';if(!sound&&window.speechSynthesis)speechSynthesis.cancel();return}
+if(a==='back')return go(BACK[screen]);
+if(a==='home')return go('home');
+if(a==='gu')return go('gu');
+if(a==='hear'){const x=screen==='lesson'?L.item:AS.item;return speakItem(x)}
+if(a==='start'){const k=t.dataset.a;L={a:k,lv:M.lv[k],n:0,score:0,ans:null,item:nextItem('math',k,M.lv[k])};return go('lesson')}
+if(a==='ans'){if(L.ans!=null)return;L.ans=i;if(L.item.opts[i]===L.item.o[0])L.score++;return render()}
+if(a==='nxt'){if(L.n==4){M.log.push({id:Date.now(),d:window.LD(),a:L.a,lv:L.lv,sc:L.score});if(L.score>=4&&L.lv<5)M.lv[L.a]=L.lv+1;save();return go('lres')}L.n++;L.ans=null;L.item=nextItem('math',L.a,L.lv);return render()}
+if(a==='asm'){const s=t.dataset.s,ks=Object.keys(AR[s]);AS={sub:s,ks,qn:0,lvl:{},best:{}};ks.forEach(k=>{AS.lvl[k]=2;AS.best[k]=0});return go('asmintro')}
+if(a==='begin'){AS.qn=0;AS.cur=AS.ks[0];AS.item=nextItem(AS.sub,AS.cur,AS.lvl[AS.cur]);return go('asmq')}
+if(a==='aa'){const k=AS.cur,lv=AS.lvl[k],ok=i>=0&&AS.item.opts[i]===AS.item.o[0];if(ok){AS.best[k]=Math.max(AS.best[k],lv);AS.lvl[k]=Math.min(4,lv+1)}else AS.lvl[k]=Math.max(1,lv-1);
+AS.qn++;if(AS.qn>=15){M.asm[AS.sub]={d:today(),best:AS.best};if(AS.sub==='math')for(const q in AS.best)M.lv[q]=Math.max(M.lv[q],Math.min(5,AS.best[q]+1));save();return go('asmdone')}
+AS.cur=AS.ks[AS.qn%5];AS.item=nextItem(AS.sub,AS.cur,AS.lvl[AS.cur]);return render()}
+if(a==='copy'){const ta=$('#gt');ta.select();try{navigator.clipboard.writeText(ta.value)}catch(x){try{document.execCommand('copy')}catch(y){}}t.textContent='Copied!'}
+});
+render();
+
+window.SMAPI={gu:()=>go("gu"),home:()=>go("home")};
+
+})(document.getElementById("h-math").shadowRoot);</script>
+<script>(function(ROOT){
+
+const SUBJ={math:{n:'Math',c:'var(--c1)'},ela:{n:'Language arts',c:'var(--c2)'},spell:{n:'Spelling',c:'var(--c3)'},sci:{n:'Science',c:'var(--c4)'},geo:{n:'Geography',c:'var(--c5)'}};
+const SEED={
+math:['Counts to 100 by 1s','Counts by 10s, 5s and 2s','Recognizes numbers 1–100','Adds within 10','Subtracts within 10','Names shapes and their sides','Tells time to the hour','Knows coin names and values'],
+ela:['Knows letter names and sounds','Blends and reads CVC words','Reads 50 common sight words','Retells a story aloud','Answers questions about a read-aloud','Writes his first name','Dictates a sentence'],
+spell:['Short a words (cat, map)','Short e words (bed, pen)','Short i words (sit, pig)','Short o words (hop, dog)','Short u words (bug, cup)','Beginning blends (st, bl, tr)','Digraphs (sh, ch, th)','Sight words (the, was, said)'],
+sci:['Names the 5 senses','Sorts living and non-living things','Describes weather and seasons','Names parts of a plant','Sorts animal groups','Predicts, tests, and explains'],
+geo:['Finds our state and country on a map','Names the 7 continents','Tells land from water on a map','Uses north, south, east and west','Knows his home address','Describes habitats']};
+const RES={solo:'On his own',help:'With help',intro:'Just exploring'};
+const KEY='learninglog.v1';
+let S=load();S.imp=S.imp||[];let tab='log',openSubj='math',delId=null,DL=null,filt='all',lastSubj='math';
+function seed(){const k=[];for(const s in SEED)SEED[s].forEach((n,i)=>k.push({id:s+i,s,n}));return{skills:k,logs:[],goal:30}}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.skills&&v.logs)return v}catch(e){}return seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Could not save on this device. Use Back up on the Portfolio tab.')}}
+const $=s=>ROOT.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmt(d){return new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}
+function mkey(d){return new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'long',year:'numeric'})}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;ROOT.appendChild(e);setTimeout(()=>e.remove(),2200)}
+function wins(k){return new Set(S.logs.filter(r=>r.k===k&&r.r==='solo').map(r=>r.d)).size}
+function status(k){const n=wins(k);if(n>=3)return['mast','Mastered'];if(n>=1)return['prac','Practicing'];if(S.logs.some(r=>r.k===k))return['intro','Introduced'];return['','Not started']}
+function skillName(k){const s=S.skills.find(x=>x.id===k);return s?s.n:'General activity'}
+const hrs=m=>(m/60).toFixed(1).replace(/\.0$/,'');
+function mins(f){return S.logs.filter(f).reduce((a,r)=>a+(+r.m||0),0)}
+function skillOpts(s){return S.skills.filter(x=>x.s===s).map(x=>'<option value="'+x.id+'">'+esc(x.n)+'</option>').join('')+'<option value="">General activity</option>'}
+
+function render(){
+const T=[['log','Log'],['skills','Skills'],['hours','Hours'],['port','Portfolio']];
+$('#tabs').innerHTML=T.map(t=>'<button data-tab="'+t[0]+'"'+(tab===t[0]?' aria-current="true"':'')+'>'+t[1]+'</button>').join('');
+$('#view').innerHTML=({log:vLog,skills:vSkills,hours:vHours,port:vPort})[tab]();
+}
+
+
+const MN={count:'Counting',add:'Adding',sub:'Subtracting',shapes:'Shapes',tm:'Time and money'};
+function rdk(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
+function pend(){const im=S.imp||(S.imp=[]);return{q:(rdk('sq.v1').log||[]).filter(l=>!im.includes('q'+l.id)),m:(rdk('sm.v1').log||[]).filter(l=>l.id&&!im.includes('m'+l.id))}}
+function importCard(){const p=pend(),n=p.q.length+p.m.length;return '<div class="card"><h2>From his games</h2><p class="meta">'+(n?n+' new '+(n==1?'activity':'activities')+' from Space Quest and Space Math. Minutes are estimated (10 per Question Quest, 5 per math mission).':'Nothing new from Space Quest or Space Math yet.')+'</p>'+(n?'<button class="btn" data-act="imp">Add to my log</button>':'')+'</div>'}
+function importAct(){const p=pend();let c=0;const add=(id,d,s,m,r,t)=>{S.logs.push({id,d:d||today(),s,k:'',m,r,t});c++};
+p.q.forEach(l=>{S.imp.push('q'+l.id);add('iq'+l.id,l.d,'sci',10,'help','Space Quest: “'+l.q+'” '+(l.right?'Guess was right. ':'Learned something new. ')+'Found out by: '+l.m+'.'+(l.art?' Drew a picture.':'')+' (auto-added, minutes estimated)');if(l.w)add('is'+l.id,l.d,'spell',5,l.sp==='first'?'solo':'help','Space Quest spelling: “'+l.w+'” '+(l.sp==='first'?'on the first try':'with a few tries')+'. (auto-added)')});
+p.m.forEach(l=>{S.imp.push('m'+l.id);add('im'+l.id,l.d,'math',5,l.sc>=4?'solo':'help','Space Math: '+MN[l.a]+' level '+l.lv+', '+l.sc+' of 5 right. (auto-added, minutes estimated)')});
+save();render();toast(c+' entries added')}
+function vLog(){
+const recent=S.logs.slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id.localeCompare(a.id)).slice(0,5);
+return importCard()+'<div class="card"><h2>New entry</h2>'+
+'<label for="f-d">Date</label><input type="date" id="f-d" value="'+today()+'">'+
+'<div class="row"><div><label for="f-s">Subject</label><select id="f-s">'+Object.keys(SUBJ).map(s=>'<option value="'+s+'"'+(s===lastSubj?' selected':'')+'>'+SUBJ[s].n+'</option>').join('')+'</select></div>'+
+'<div><label for="f-m">Minutes</label><input type="number" id="f-m" min="1" max="600" value="20" inputmode="numeric"></div></div>'+
+'<label for="f-k">Skill practiced</label><select id="f-k">'+skillOpts(lastSubj)+'</select>'+
+'<label for="f-r">How did it go?</label><select id="f-r"><option value="solo">On his own</option><option value="help">With help</option><option value="intro">Just exploring</option></select>'+
+'<label for="f-t">What did you do? (photo saved? note the album or date)</label><textarea id="f-t" placeholder="Built words with letter tiles, spelled 5 of 6 out loud"></textarea>'+
+'<button class="btn" data-act="addlog">Save entry</button></div>'+
+'<div class="card"><h2>Recent entries</h2>'+(recent.length?recent.map(entry).join(''):'<p class="empty">Nothing logged yet. Your first entry will show up here.</p>')+'</div>'}
+
+function entry(r){return '<div class="entry"><span class="tag" style="color:'+SUBJ[r.s].c+'">'+SUBJ[r.s].n+'</span> <span class="meta">'+fmt(r.d)+' · '+r.m+' min · '+RES[r.r]+'</span><div>'+esc(skillName(r.k))+'</div>'+(r.t?'<div class="meta">'+esc(r.t)+'</div>':'')+'</div>'}
+
+function vSkills(){
+return Object.keys(SUBJ).map(s=>{
+const ks=S.skills.filter(x=>x.s===s),m=ks.filter(x=>wins(x.id)>=3).length,open=openSubj===s;
+let h='<div class="card"><button class="btn alt small" data-act="toggle" data-s="'+s+'" style="width:100%;text-align:left;display:flex;justify-content:space-between;border-color:'+SUBJ[s].c+';color:var(--ink)" aria-expanded="'+open+'"><span>'+SUBJ[s].n+'</span><span>'+m+' of '+ks.length+' mastered</span></button>';
+if(open){h+=ks.map(x=>{const st=status(x.id),w=Math.min(wins(x.id),3);return '<div class="skill"><div class="nm">'+esc(x.n)+'</div><span class="dots" title="'+w+' of 3 independent days">'+[0,1,2].map(i=>'<i class="'+(i<w?'on':'')+'"></i>').join('')+'</span><span class="chip '+st[0]+'">'+st[1]+'</span><button class="btn alt small" data-act="del" data-id="'+x.id+'" aria-label="Remove '+esc(x.n)+'">'+(delId===x.id?'Sure?':'×')+'</button></div>'}).join('')||'<p class="empty">No skills yet.</p>';
+h+='<div class="row" style="margin-top:10px"><input id="ns-'+s+'" placeholder="Add your own skill" aria-label="New skill for '+SUBJ[s].n+'"><button class="btn small" style="flex:0 0 auto" data-act="addskill" data-s="'+s+'">Add</button></div>'}
+return h+'</div>'}).join('')+'<p class="meta">A skill is Mastered after 3 successes “on his own” on 3 different days.</p>'}
+
+function vHours(){
+const now=new Date(),ym=today().slice(0,7),wk=new Date(now.getTime()-6*864e5),wkS=wk.getFullYear()+'-'+String(wk.getMonth()+1).padStart(2,'0')+'-'+String(wk.getDate()).padStart(2,'0');
+const mo=mins(r=>r.d.slice(0,7)===ym),w=mins(r=>r.d>=wkS),all=mins(()=>true),goal=+S.goal||0,pct=goal?Math.min(100,mo/60/goal*100):0,yr=Math.min(100,all/60/1116*100);
+const per=Object.keys(SUBJ).map(s=>[s,mins(r=>r.s===s)]);const mx=Math.max(1,...per.map(p=>p[1]));
+return '<div class="card"><div class="stat"><div><b>'+hrs(w)+'</b><span>hours, last 7 days</span></div><div><b>'+hrs(mo)+'</b><span>hours this month</span></div><div><b>'+hrs(all)+'</b><span>hours total</span></div></div></div>'+
+'<div class="card"><h2>Monthly goal</h2><div class="bar" role="img" aria-label="'+Math.round(pct)+' percent of monthly goal"><i style="width:'+pct+'%"></i></div><p class="meta">'+hrs(mo)+' of '+goal+' hours this month</p><label for="g">Hours per month (raise it a little at a time)</label><input type="number" id="g" min="0" max="200" value="'+goal+'" inputmode="numeric"></div>'+
+'<div class="card"><h2>By subject</h2>'+per.map(p=>'<div style="margin-bottom:8px"><div class="meta">'+SUBJ[p[0]].n+' · '+hrs(p[1])+' h</div><div class="bar"><i style="width:'+p[1]/mx*100+'%;background:'+SUBJ[p[0]].c+'"></i></div></div>').join('')+'</div>'+
+'<div class="card"><h2>Kansas full-year benchmark</h2><div class="bar"><i style="width:'+yr+'%"></i></div><p class="meta">'+hrs(all)+' of 1,116 hours. Kansas expects this for grades 1–11 once he is 7. Confirm what counts with KSDE.</p></div>'}
+
+function vPort(){
+const L=S.logs.filter(r=>filt==='all'||r.s===filt).sort((a,b)=>b.d.localeCompare(a.d)||b.id.localeCompare(a.id));
+const g={};L.forEach(r=>{(g[mkey(r.d)]=g[mkey(r.d)]||[]).push(r)});
+return '<div class="card"><h2>Portfolio</h2><label for="pf">Show</label><select id="pf"><option value="all">All subjects</option>'+Object.keys(SUBJ).map(s=>'<option value="'+s+'"'+(filt===s?' selected':'')+'>'+SUBJ[s].n+'</option>').join('')+'</select>'+
+'<button class="btn" data-act="dlport">Download portfolio</button> '+
+'<button class="btn alt" data-act="backup">Back up data</button> <label class="btn alt" style="display:inline-block;width:auto;cursor:pointer;font-size:1rem">Restore backup<input type="file" id="rf" accept=".json" style="display:none"></label>'+
+'<p class="meta">Data is saved in this browser on this device. Back up now and then.</p></div>'+
+'<div class="card">'+(L.length?Object.keys(g).map(k=>'<h3>'+esc(k)+'</h3>'+g[k].map(entry).join('')).join(''):'<p class="empty">No entries yet.</p>')+'</div>'}
+
+function portHtml(){
+const done=S.skills.filter(x=>wins(x.id)>=3),L=S.logs.slice().sort((a,b)=>a.d.localeCompare(b.d));
+return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Homeschool learning portfolio</title><style>body{font:16px/1.5 Georgia,serif;max-width:760px;margin:24px auto;padding:0 16px;color:#222}h1,h2{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:6px;text-align:left;vertical-align:top;font-size:14px}</style></head><body><h1>Homeschool learning portfolio</h1><p>Generated '+esc(fmt(today()))+'. Total instruction time logged: '+hrs(mins(()=>true))+' hours.</p><h2>Skills mastered ('+done.length+')</h2><ul>'+(done.map(x=>'<li>'+esc(SUBJ[x.s].n)+': '+esc(x.n)+'</li>').join('')||'<li>None yet</li>')+'</ul><h2>Activity log</h2><table><tr><th>Date</th><th>Subject</th><th>Skill</th><th>Min</th><th>Result</th><th>Notes</th></tr>'+L.map(r=>'<tr><td>'+esc(fmt(r.d))+'</td><td>'+esc(SUBJ[r.s].n)+'</td><td>'+esc(skillName(r.k))+'</td><td>'+esc(r.m)+'</td><td>'+esc(RES[r.r])+'</td><td>'+esc(r.t||'')+'</td></tr>').join('')+'</table></body></html>'}
+
+async function dl(name,data){if(DL){try{await DL.save({filename:name,data});toast('Saved')}catch(e){if(e&&e.code!=='declined')toast('Could not save that file.')}return}try{const type=/\.json$/.test(name)?'application/json':'text/html';const u=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Saved to your downloads')}catch(e){toast('Could not save that file.')}}
+
+ROOT.addEventListener('click',e=>{
+const t=e.target.closest('[data-tab],[data-act]');if(!t)return;
+if(t.dataset.tab){tab=t.dataset.tab;return render()}
+const a=t.dataset.act;
+if(a==='addlog'){const m=Math.max(1,Math.min(600,+$('#f-m').value||0));if(!m)return toast('Add the minutes spent.');lastSubj=$('#f-s').value;S.logs.push({id:'l'+Date.now(),d:$('#f-d').value||today(),s:lastSubj,k:$('#f-k').value,m,r:$('#f-r').value,t:$('#f-t').value.trim()});save();render();toast('Entry saved')}
+if(a==='toggle'){openSubj=openSubj===t.dataset.s?'':t.dataset.s;render()}
+if(a==='del'){if(delId===t.dataset.id){S.skills=S.skills.filter(x=>x.id!==delId);delId=null;save()}else delId=t.dataset.id;render()}
+if(a==='addskill'){const s=t.dataset.s,i=$('#ns-'+s),n=i.value.trim();if(!n)return;S.skills.push({id:'c'+Date.now(),s,n});save();render()}
+if(a==='imp')return importAct();
+if(a==='dlport')dl('learning-portfolio.html',portHtml());
+if(a==='backup')dl('learning-log-backup.json',JSON.stringify(S));
+});
+ROOT.addEventListener('change',e=>{
+const i=e.target.id;
+if(i==='f-s'){lastSubj=e.target.value;$('#f-k').innerHTML=skillOpts(lastSubj)}
+if(i==='g'){S.goal=Math.max(0,+e.target.value||0);save();render()}
+if(i==='pf'){filt=e.target.value;render()}
+if(i==='rf'){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const v=JSON.parse(r.result);if(!Array.isArray(v.skills)||!Array.isArray(v.logs))throw 0;S=v;save();render();toast('Backup restored')}catch(x){toast('That file is not a valid backup.')}};r.readAsText(f)}
+});
+render();
+(async()=>{try{if(window.claude&&claude.use){DL=await claude.use('downloads');if(tab==='port')render()}}catch(e){}})();
+
+window.SLAPI={refresh:()=>{S.imp=S.imp||[];render()}};
+
+})(document.getElementById("h-log").shadowRoot);</script>
+<script>
+(function(){
+const ids=['quest','math','log'];
+function show(id,after){document.getElementById('home').hidden=!!id;document.getElementById('bar').hidden=!id;ids.forEach(function(i){document.getElementById('app-'+i).hidden=i!==id});
+if(id==='log'&&window.SLAPI)window.SLAPI.refresh();if(after)after();window.scrollTo(0,0);if(window.speechSynthesis)speechSynthesis.cancel()}
+document.addEventListener('click',function(e){const t=e.target.closest('[data-go]');if(!t)return;const g=t.dataset.go;
+if(g==='home')return show('');if(g==='check')return show('math',function(){window.SMAPI&&window.SMAPI.gu()});show(g)});
+})();
+</script>
+</body></html>
